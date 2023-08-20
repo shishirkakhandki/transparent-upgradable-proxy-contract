@@ -27,8 +27,9 @@ async function main() {
 
     // Upgrade!
     // Not "the hardhat-deploy way"
-    const boxProxyAdmin = await ethers.getContract("BoxProxyAdmin")
-    const transparentProxy = await ethers.getContract("Box_Proxy")
+    const boxProxyAdminContract = await deployments.get("BoxProxyAdmin")
+    const boxProxyAdmin = await ethers.getContractAt("BoxProxyAdmin", boxProxyAdminContract.address)
+    const transparentProxy = await deployments.get("Box_Proxy")
     const upgradeTx = await boxProxyAdmin.upgrade(transparentProxy.address, boxV2.address)
     await upgradeTx.wait(1)
     const proxyBox = await ethers.getContractAt("BoxV2", transparentProxy.address)
